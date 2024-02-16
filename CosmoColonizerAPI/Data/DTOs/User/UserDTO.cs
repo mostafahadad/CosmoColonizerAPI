@@ -1,10 +1,11 @@
-﻿namespace CosmoColonizerAPI.Data.Entities
+﻿using CosmoColonizerAPI.Data.Entities;
+
+namespace CosmoColonizerAPI.Data.DTOs.User
 {
-    public class User
+    public class UserDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int? PlanetId { get; set; }
-        public Planet Planet { get; set; }
     }
 }

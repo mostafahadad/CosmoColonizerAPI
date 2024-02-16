@@ -1,4 +1,5 @@
 ﻿using CosmoColonizerAPI.Data;
+using CosmoColonizerAPI.Data.DTOs.User;
 using CosmoColonizerAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,9 +26,9 @@ namespace CosmoColonizerAPI.Services.Users
             return user;
         }
 
-        public async Task<User> AddAsync(Guid id, string name)
+        public async Task<User> AddAsync(UserDTO userDto)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var existingUser = await _context.Users.FindAsync(userDto.Id);
 
             if (existingUser != null)
             {
@@ -36,8 +37,9 @@ namespace CosmoColonizerAPI.Services.Users
 
             var user = new User
             {
-                Id = id,
-                Name = name
+                Id = userDto.Id,
+                Name = userDto.Name,
+                PlanetId = userDto.PlanetId
             };
 
             await _context.Users.AddAsync(user);

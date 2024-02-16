@@ -1,6 +1,8 @@
+using CosmoColonizerAPI;
 using CosmoColonizerAPI.Data;
 using CosmoColonizerAPI.Services.Planets;
 using CosmoColonizerAPI.Services.Users;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,10 +23,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 builder.Services.AddScoped<IPlanetsService, PlanetsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IClaimsTransformation, RolesTransformation>();
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("")
+        builder => builder.WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
@@ -42,7 +47,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "",
+            ValidIssuer = "http://localhost:8080/realms/CosmoColonizer",
 
             ValidateAudience = false,
 
@@ -63,6 +68,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

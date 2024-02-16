@@ -1,4 +1,5 @@
-﻿using CosmoColonizerAPI.Data.Entities;
+﻿using CosmoColonizerAPI.Data.DTOs.User;
+using CosmoColonizerAPI.Data.Entities;
 
 namespace CosmoColonizerAPI.Services.Users
 {
@@ -6,7 +7,7 @@ namespace CosmoColonizerAPI.Services.Users
     {
         Task<ICollection<User>> GetAllAsync();
         Task<User> GetByIdAsync(Guid id);
-        Task<User> AddAsync(Guid id, string name);
+        Task<User> AddAsync(UserDTO userDto);
         
     }
 }

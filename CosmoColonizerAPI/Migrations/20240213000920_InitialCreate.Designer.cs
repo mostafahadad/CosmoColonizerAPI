@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CosmoColonizerAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240210061946_InitialCreate")]
+    [Migration("20240213000920_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,6 +32,15 @@ namespace CosmoColonizerAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double?>("AtmosphericPressure")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Gravity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -78,9 +87,23 @@ namespace CosmoColonizerAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PlanetId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("PlanetId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CosmoColonizerAPI.Data.Entities.User", b =>
+                {
+                    b.HasOne("CosmoColonizerAPI.Data.Entities.Planet", "Planet")
+                        .WithMany()
+                        .HasForeignKey("PlanetId");
+
+                    b.Navigation("Planet");
                 });
 #pragma warning restore 612, 618
         }

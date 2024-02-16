@@ -20,9 +20,12 @@ namespace CosmoColonizerAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Temperature = table.Column<double>(type: "float", nullable: true),
                     OxygenVolume = table.Column<double>(type: "float", nullable: true),
-                    WaterVolume = table.Column<double>(type: "float", nullable: true)
+                    WaterVolume = table.Column<double>(type: "float", nullable: true),
+                    Gravity = table.Column<double>(type: "float", nullable: true),
+                    AtmosphericPressure = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,32 +37,43 @@ namespace CosmoColonizerAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PlanetId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Planets_PlanetId",
+                        column: x => x.PlanetId,
+                        principalTable: "Planets",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
                 table: "Planets",
-                columns: new[] { "Id", "Name", "OxygenVolume", "Temperature", "WaterVolume" },
+                columns: new[] { "Id", "AtmosphericPressure", "Gravity", "ImageUrl", "Name", "OxygenVolume", "Temperature", "WaterVolume" },
                 values: new object[,]
                 {
-                    { 1, "Terra Nova", null, null, null },
-                    { 2, "Luna Magna", null, null, null },
-                    { 3, "Solara", null, null, null }
+                    { 1, null, null, null, "Terra Nova", null, null, null },
+                    { 2, null, null, null, "Luna Magna", null, null, null },
+                    { 3, null, null, null, "Solara", null, null, null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_PlanetId",
+                table: "Users",
+                column: "PlanetId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Planets");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Planets");
         }
     }
 }
